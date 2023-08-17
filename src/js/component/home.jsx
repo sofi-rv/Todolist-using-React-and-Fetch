@@ -68,9 +68,9 @@ const Home = () => {
 		}
 	}
 
-	 const handleUser = (e) => {
-	 	let user = e.target.value
-	 	setUsername(user)
+	//  const handleUser = (e) => {
+	//  	let user = e.target.value
+	//  	setUsername(user)
 	}
 	let getTask = async () => {
 		try {
