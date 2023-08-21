@@ -1,42 +1,59 @@
 import React, { useState, useEffect } from "react";
 
 
-const URI = "https://playground.4geeks.com/apis/fake/todos/user/"
+const URI = "https://playground.4geeks.com/apis/fake/todos/user/soficr2"
 const initialState = { label: "", done: false }
 
 //create your first component
 const Home = () => {
 	const [tarea, setTarea] = useState(initialState)
 	const [lista, setLista] = useState([{ done: false, label: "No hay Tareas" }])
-	const [username, setUsername] = useState("")
+	// const [username, setUsername] = useState("")
 
 	const handleChange = (e) => {
 		setTarea({
 			...tarea,
-			label: e.target.value
+			label: e.target.value,
 		})
 	}
-
+const createUser =  async () => {
+	try {
+		let response = await fetch (URI , {
+			method : "POST", 
+			headers : {
+				"Content-Type" : "application/json"
+			}
+			, 
+			body : JSON.stringify ([])
+		})
+		if(response.ok) {
+			getTask()
+		}
+	} catch (error) {
+		
+	}
+}
 	const handleInput = async (e) => {
-		let objTexto = { label: e.target.value, done: false }
+		// let objTexto = { label: e.target.value, done: false }
 		if (e.keyCode == 13) {
-			setTarea(e.target.value)
+			// setTarea(e.target.value)
 			//Una primera aproximación para agregar a la lista es usando una variable auxiliar
 			//let tempArr = lista.slice() //copia de arreglo por valor
 			//tempArr.push(texto)
 			//setLista(tempArr)
 
 			//Una segunda aproximación es usando el operador spread ...
-			let arregloTemp = [...lista, objTexto]
+			// let arregloTemp = [...lista, objTexto]
 			//Actualizar lista de Todos
-			let response = await fetch(URI + username, {
+			let response = await fetch(URI, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(arregloTemp)
+				body: JSON.stringify([...lista,tarea])
 			})
 			if (response.ok) {
 				//Aquí se actualiza la lista de tareas
-				setLista([...lista, objTexto])
+				// setLista([...lista, objTexto])
+				getTask()
 
 			} else {
 				alert("Hubo un error al intentar actualizar")
@@ -80,6 +97,9 @@ const Home = () => {
 			if (response.ok) {
 				setLista(data)
 			}
+if(response.status == 404) {
+	createUser()
+}
 
 		} catch (error) {
 			console.log(error)
@@ -103,7 +123,7 @@ const Home = () => {
 
 	// }, [username])
 
-	useEffect(() => { getTask() })
+	useEffect(() => { getTask() }, [])
 
 	return (
 		<>
